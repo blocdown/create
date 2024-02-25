@@ -1,0 +1,12 @@
+text||lbl
+text|testbtn|btn
+[text|testtext|txt]|testtexti|r
+[0|testnum|#]|testnumi|r
+[|testbool|bool]|testbooli|r
+[90|testangle|dir]|testanglei|r
+[#ff0000|testcolor|c]|testcolori|r
+[1111100000111110000011111|testmartrix|m]|testmartrixi|r
+[1|testnote|n]|testnotei|r
+[|testcostume|cm]|testcostumei|r
+[|testsound|sd]|testsoundi|r
+[""|testimage|img]|testimagei|r

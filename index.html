@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>BlocDown - Create extensions for Turbowarp</title>
+  <link href="./style.css" rel="stylesheet" type="text/css" />
+  <link href="./images/logo.svg" rel="icon" type="image/svg" />
+</head>
+<body>
+  <div class="header">
+    <table>
+      <tr>
+        <td>
+          <img src="/images/logo.svg" id="logo" alt="BlocDown logo">
+        </td>
+        <td>
+          <h1>BlocDown</h1>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <table id="code-area">
+    <tr>
+      <td class="codebox">
+        <textarea id="code-unparsed"></textarea>
+      </td>
+      <td class="sidebar">
+        <p>Extension name:</p>
+        <input type="text" id="ext-name">
+        <br>
+        <p>Extension class:</p>
+        <input type="text" id="ext-class">
+        <br>
+        <p>Extension ID:</p>
+        <input type="text" id="ext-id">
+        <br>
+        <div class="checkbox">
+          <input class="c-box" type="checkbox" id="ext-unsandbox">
+          <label for="ext-unsandbox">Extension must run unsandboxed?</label>
+        </div>
+        <button class="btn-main parse-btn" onclick="parseCode()">
+          Create extension
+        </button>
+      </td>
+    </tr>
+  </table>
+  <textarea id="code-parsed"></textarea>
+
+  <script src="./script.js"></script>
+</body>
+</html>
