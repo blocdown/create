@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>BlocDown - Create extensions for Turbowarp</title>
-  <link href="./style.css" rel="stylesheet" type="text/css" />
-  <link href="./images/logo.svg" rel="icon" type="image/svg" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="images/logo.svg" rel="icon" type="image/svg" />
 </head>
 <body>
   <div class="header">
     <table>
       <tr>
         <td>
-          <img src="./images/logo.svg" id="logo" alt="BlocDown logo">
+          <img src="images/logo.svg" id="logo" alt="BlocDown logo">
         </td>
         <td>
           <h1>BlocDown</h1>
@@ -23,7 +23,7 @@
   <table id="code-area">
     <tr>
       <td class="codebox">
-        <textarea id="code-unparsed"></textarea>
+        <textarea id="code-Raw"></textarea>
       </td>
       <td class="sidebar">
         <p>Extension name:</p>
@@ -39,7 +39,7 @@
           <input class="c-box" type="checkbox" id="ext-unsandbox">
           <label for="ext-unsandbox">Extension must run unsandboxed?</label>
         </div>
-        <button class="btn-main parse-btn" onclick="parseCode()">
+        <button class="btn-main parse-btn" onclick="constructExtension()">
           Create extension
         </button>
       </td>
@@ -47,6 +47,10 @@
   </table>
   <textarea id="code-parsed"></textarea>
 
-  <script src="./script.js"></script>
+  <script src="utilities.js"></script>
+  <script src="input-block-type-cast.js"></script>
+  <script src="constructors.js"></script>
+  <script src="extension-constructor.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,77 +1,24 @@
-const codeUP = document.getElementById("code-unparsed");
-const codeDisplay = document.getElementById("code-parsed");
+const extensionRaw = document.getElementById("code-Raw");
+const extensionDisplay = document.getElementById("code-parsed");
 
-/*
-  @param {string} rawVal
-  @returns {string}
-*/
-
-function castBlockType(rawVal) {
-  let val = rawVal.toLowerCase();
-  if (val === "r") {
-    return "REPORTER";
-  } else if (val === "b" || val === "bool") {
-    return "BOOLEAN";
-  } else if (val === "c") {
-    return "COMMAND";
-  } else if (val === "lb" || val === "lbl") {
-    return "LABEL";
-  } else if (val === "bt" || val === "btn") {
-    return "BUTTON";
-  } else if (val === "h") {
-    return "HAT";
-  } else if (val === "e") {
-    return "EVENT";
-  } else if (val === "l") {
-    return "LOOP";
-  } else if (val === "cl") {
-    return "CONDITIONAL";
-  } else {
-    return val.toUpperCase();
-  }
-}
-
-/*
-  @param {string} rawVal
-  @returns {string}
-*/
-
-function castInputType(rawVal) {
-  let val = rawVal.toLowerCase();
-  if (val === "s" || val === "str" || val === "t" || val === "txt" || val === "text") {
-    return "STRING";
-  } else if (val === "no" || val === "num" || val === "#") {
-    return "NUMBER";
-  } else if (val === "b" || val === "bool") {
-    return "BOOLEAN";
-  } else if (val === "a" || val === "d" || val === "dir" || val === "direction") {
-    return "ANGLE";
-  } else if (val === "c" || val === "colour") {
-    return "COLOR";
-  } else if (val === "m") {
-    return "MATRIX";
-  } else if (val === "n") {
-    return "NOTE";
-  } else if (val === "cm") {
-    return "COSTUME";
-  } else if (val === "sd") {
-    return "SOUND";
-  } else if (val === "i" || val === "img") {
-    return "IMAGE";
-  } else {
-    return val.toUpperCase();
-  }
-}
-
-/*
-  @returns {object}
-*/
+/**
+ * Gets the other extension data
+  * @returns {object}
+  *  {object} - Object containing extension data:
+  *    - name: string - The extension's name
+  *    - class: string - The extension's class name
+  *    - id: string - The extension's ID
+  *    - unsandboxed: boolean - Whether the extension must run unsandboxed
+  *    - unsandboxDisclaimer: string - The disclaimer to be shown when the extension is unsandboxed
+  *    - websiteStuff: string - The website stuff to be added to the extension
+  *    - colors: string - The colors to be used in the extension
+  */
 
 function getOtherExtData() {
   let name = document.getElementById("ext-name").value;
   let extClass = document.getElementById("ext-class").value;
   let id = document.getElementById("ext-id").value;
-  
+
   let extUnsandbox = document.getElementById("ext-unsandbox").checked;
   let unsandboxDisclaimer = "";
   if (extUnsandbox) {
@@ -87,16 +34,18 @@ function getOtherExtData() {
     name,
     class: extClass,
     id,
+    unsandboxed: extUnsandbox,
     unsandboxDisclaimer,
     websiteStuff,
     colors
   }
 }
 
-/*
-  @param {string} val
-  @returns {array}
-*/
+/**
+ * Gets the 3 parts of the given val, seperated by a pipe (|)
+ * @param {string} val - The value to be split
+ * @returns {array} - The 3 parts of the value
+ */
 
 function getParts(val) {
   let parts = [];
@@ -113,26 +62,11 @@ function getParts(val) {
   return parts;
 }
 
-/*
-  @param {string} string
-  @param {string} char
-  @returns {array}
-*/
-
-function getAllIndexes(string, char) {
-  let indexes = [];
-  for (let i = 0; i < string.length; i++) {
-    if (string[i] === char) {
-      indexes.push(i);
-    }
-  }
-  return indexes;
-}
-
-/*
-  @param {string} rawText
-  @returns {object}
-*/
+/**
+ * Extracts the text parts and args from the given block text
+ * @param {string} rawText - The block text to extract the parts from
+ * @returns {array} - The extracted parts
+ */
 
 function extractArgsAndTextParts(rawText) {
   let openBracketIs = getAllIndexes(rawText, "[");
@@ -161,11 +95,12 @@ function extractArgsAndTextParts(rawText) {
   };
 }
 
-/*
-  @param {array} parts
-  @param {array} argCodes
-  @returns {string}
-*/
+/**
+ * Assembles the block text from the given parts and arg codes
+ * @param {array} parts - The text parts
+ * @param {array} args - The arg codes
+ * @returns {string} - The assembled block text
+ */
 
 function constructBlockText(parts, argCodes) {
   let text = parts.shift();
@@ -176,20 +111,26 @@ function constructBlockText(parts, argCodes) {
   return text;
 }
 
-/*
-  @param {string} rawVal
-  @returns {object}
-*/
+/**
+ * Extracts the block parts from the given text
+ * @param {string} rawVals - The text to extract the parts from
+ * @returns {object}
+ *  {object} - The extracted parts:
+ *    - opcode: string - The block's opcode
+ *    - type: string - The block's type
+ *    - text: string - The block's text
+ *    - args: array - The block's args
+ */
 
 function extractBlockParts(rawVal) {
   let blockparts = {};
-  let codeParts = getParts(rawVal);
-  if (!codeParts) {
+  let extensionParts = getParts(rawVal);
+  if (!extensionParts) {
     return;
   }
-  let rawText = codeParts.shift();
-  blockparts.opcode = codeParts.shift();
-  blockparts.type = castBlockType(codeParts.shift());
+  let rawText = extensionParts.shift();
+  blockparts.opcode = extensionParts.shift();
+  blockparts.type = castBlockType(extensionParts.shift());
   if (!(rawText.includes("["))) {
     blockparts.text = rawText;
     return blockparts;
@@ -207,6 +148,7 @@ function extractBlockParts(rawVal) {
     if (!argParts) {
       return;
     }
+
     let arg = {
       defaultVal: argParts[0],
       name: argParts[1],
@@ -220,118 +162,23 @@ function extractBlockParts(rawVal) {
   return blockparts;
 }
 
-/*
-  @param {array} args
-  @returns {string}
-*/
+/**
+ * Generates the functions for the given opcodes
+ * @param {array} opcodes - The opcodes to generate the functions for
+ * @returns {string} - The generated functions
+ */
 
-function parseArgs(args) {
-  let parsed = `            arguments: {`;
-  let i = 0;
-  args.forEach(arg => {
-    i++;
-    if (arg.type === "IMAGE") {
-      parsed += `
-              ${arg.name}: {
-                type: Scratch.ArgumentType.IMAGE,
-                dataURI: ${arg.defaultVal}
-              }`;
-    } else if (arg.type === "BOOLEAN" || arg.type === "COSTUME" || arg.type === "SOUND") {
-      parsed += `
-              ${arg.name}: {
-                type: Scratch.ArgumentType.${arg.type}
-              }`;
-    } else {
-      parsed += `
-              ${arg.name}: {
-                type: Scratch.ArgumentType.${arg.type},
-                defaultValue: "${arg.defaultVal}"
-              }`;
+function genrateFuntionsForOpcodes(opcodes) {
+  if (!opcodes) {
+    return "";
+  }
+  let functions = "";
+  opcodes.forEach(opcode => {
+    functions += `
+    ${opcode}(args, util) {
+      
     }
-    if (!(i === args.length)) {
-      parsed += ",";
-    }
-    parsed += `
-            }`;
+`;
   });
-  return parsed;
+  return functions;
 }
-
-/*
-  @param {object} block
-  @returns {string}
-*/
-
-function parseBlock(block) {
-  if (!block) {
-    return;
-  }
-  let parsed = "";
-  if (block.type === "BUTTON") {
-    parsed = `
-          {
-            func: "${block.opcode}",
-            blockType: Scratch.BlockType.BUTTON,
-            text: "${block.text}",
-          }`;
-  } else if (block.type === "LABEL") {
-    parsed = `
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: "${block.text}",
-          }`;
-  } else if (!block.args) {
-    parsed = `
-          {
-            opcode: "${block.opcode}",
-            blockType: Scratch.BlockType.${block.type},
-            text: "${block.text}",
-          }`;
-  } else {
-    parsed = `
-          {
-            opcode: "${block.opcode}",
-            blockType: Scratch.BlockType.${block.type},
-            text: "${block.text}",
-${parseArgs(block.args)}
-          }`;
-  }
-  return parsed;
-}
-
-function parseCode() {
-  let code = codeUP.value;
-  let lines = code.split("\n");
-  let ext = getOtherExtData();
-  let parsed = `${ext.websiteStuff}(function(Scratch) {
-  "use strict";
-${ext.unsandboxDisclaimer}
-  class ${ext.class} {
-    getInfo() {
-      return {
-        id: "${ext.id}",
-        name: "${ext.name}",${ext.colors}
-        blocks: [`;
-  let i = 0;
-  lines.forEach(line => {
-    i++;
-    let block = extractBlockParts(line);
-    if (!block) {
-      return;
-    }
-    parsed += parseBlock(block);
-    if (!(i === lines.length)) {
-      parsed += ",";
-    }
-  });
-  parsed += `
-        ],
-      };
-    }
-  
-  }
-  Scratch.extensions.register(new ${ext.class}());
-})(Scratch);`;
-  codeDisplay.value = parsed;
-}
-

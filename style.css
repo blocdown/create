@@ -36,12 +36,12 @@ textarea {
   height: 100%;
 }
 
-/**
+/***
 td, table {
   border-style: dashed;
   border-color: blue;
 }
-/**/
+/***/
 
 .codebox {
   width: 100%;
@@ -75,11 +75,4 @@ td, table {
 
 #code-parsed {
   height: 20em;
-}
-
-@media screen and (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
-  
 }
