@@ -26,12 +26,12 @@ function constructArgs(args) {
                 defaultValue: "${arg.defaultVal}"
               }`;
     }
-    if (!(i === args.length)) {
+    if (i !== args.length) {
       constructed += ",";
     }
-    constructed += `
-            }`;
   });
+  constructed += `
+            }`;
   return constructed;
 }
 
